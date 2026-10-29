@@ -1,0 +1,1108 @@
+/* -- Variables --
+   This section stores reusable colors, fonts, and sizes.
+   Changing a variable here updates every element that uses it.
+*/
+:root {
+    --background: #080A0B;
+    --sidebar: #111416;
+    --surface: #121619;
+    --surface-hover: #1A2024;
+    --primary: #0D9488;
+    --primary-hover: #0F766E;
+    --income: #16A34A;
+    --expense: #DC2626;
+    --text: #F8FAFC;
+    --muted: #94A3B8;
+    --border: #27313A;
+    --radius: 12px;
+    --font-main: "Inter", Arial, sans-serif;
+}
+
+/* -- Reset --
+   Removes browser default spacing so the layout is predictable.
+   border-box includes padding and borders in an element's width.
+*/
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* -- Page Defaults --
+   Smooth scrolling improves navigation between dashboard sections.
+   The body sets the default background, text color, and font.
+*/
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 20px;
+}
+
+body {
+    min-width: 320px;
+    background: var(--background);
+    color: var(--text);
+    font-family: var(--font-main);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Form controls inherit the site's font instead of using browser defaults. */
+button,
+input,
+select {
+    font: inherit;
+}
+
+button,
+a,
+select {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Buttons display a pointer when clickable and look disabled when unavailable. */
+button {
+    cursor: pointer;
+}
+
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+/* Removes default link underlines and lets links inherit the surrounding text color. */
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* Prevents images from exceeding their containers. */
+img {
+    display: block;
+    max-width: 100%;
+}
+
+/* Shows a visible outline when users navigate with a keyboard. */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 3px;
+}
+
+/* Completely hides elements marked as hidden by HTML or JavaScript. */
+[hidden] {
+    display: none !important;
+}
+
+/* Hides text visually while keeping it available to screen readers. */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* -- Main Layout --
+   CSS Grid creates a fixed-width sidebar and a flexible main content area.
+   minmax(0, 1fr) allows the main area to shrink without overflowing.
+*/
+.app-layout {
+    display: grid;
+    grid-template-columns: 210px minmax(0, 1fr);
+    min-height: 100vh;
+}
+
+/* Keeps the sidebar visible while the page content scrolls. */
+.sidebar {
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    height: 100vh;
+    padding: 18px 12px;
+    overflow-y: auto;
+    background: var(--sidebar);
+    border-right: 1px solid var(--border);
+}
+
+/* min-width: 0 prevents long content from forcing the main area wider. */
+.main-content {
+    min-width: 0;
+    padding: 16px;
+}
+
+/* -- Sidebar Navigation --
+   Grid stacks the navigation links vertically with consistent spacing.
+*/
+.sidebar-nav {
+    display: grid;
+    gap: 5px;
+}
+
+/* Each link aligns its icon and label horizontally. */
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 10px 12px;
+    color: var(--muted);
+    border: 1px solid transparent;
+    border-radius: 8px;
+    transition: background 0.2s, color 0.2s;
+}
+
+/* Gives navigation icons equal width so the labels align neatly. */
+.nav-link i {
+    width: 18px;
+    text-align: center;
+}
+
+/* Highlights the current section and provides hover feedback. */
+.nav-link:hover,
+.nav-link.active {
+    color: var(--text);
+    background: rgba(13, 148, 136, 0.13);
+}
+
+.nav-link.active {
+    border-color: rgba(13, 148, 136, 0.25);
+}
+
+/* Colors the active navigation icon with the main accent color. */
+.nav-link.active i {
+    color: var(--primary);
+}
+
+/* -- Sidebar Budget --
+   Creates a compact card for the user's monthly budget summary.
+*/
+.sidebar-budget {
+    padding: 13px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+/* Makes the budget heading less prominent than the budget amount. */
+.sidebar-budget h2 {
+    margin-bottom: 8px;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* Emphasizes the budget amount and prevents long numbers from overflowing. */
+.budget-amount {
+    margin-bottom: 10px;
+    font-size: 20px;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+/* Styles the explanatory text beneath the sidebar progress bar. */
+.budget-note {
+    margin-top: 8px;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+/* -- Sidebar Footer --
+   Places the logo, storage status, and copyright at the bottom of the sidebar.
+   margin-top: auto uses the available vertical space above the footer.
+*/
+.sidebar-footer {
+    display: grid;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+}
+
+/* Aligns the logo image and FinTrack name horizontally. */
+.footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    width: fit-content;
+    font-size: 17px;
+    font-weight: 800;
+}
+
+/* Controls the logo's dimensions without stretching the image. */
+.brand-logo {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+}
+
+/* Aligns the green status indicator with the local-storage message. */
+.sidebar-status {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+/* Creates the small green status dot. */
+.status-indicator {
+    width: 7px;
+    height: 7px;
+    flex-shrink: 0;
+    background: var(--income);
+    border-radius: 50%;
+}
+
+/* Keeps the copyright text subtle. */
+.sidebar-copyright {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+/* -- Top Bar --
+   Places the menu button, current date, and theme toggle in one row.
+   margin-left: auto pushes the date toward the right side.
+*/
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 22px;
+}
+
+.current-date {
+    margin-left: auto;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+/* Creates a consistent button for icons such as the menu and theme toggle. */
+.icon-button {
+    display: inline-grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    transition: background 0.2s;
+}
+
+.icon-button:hover {
+    background: var(--surface-hover);
+}
+
+/* The sidebar menu button is hidden on desktop and enabled on mobile. */
+.sidebar-toggle {
+    display: none;
+}
+
+/* -- Dashboard Introduction --
+   Separates the dashboard heading from the Add Transaction button.
+*/
+.welcome-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+/* Uses the accent color to distinguish the small introductory label. */
+.eyebrow {
+    margin-bottom: 5px;
+    color: var(--primary);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+}
+
+/* clamp() scales the heading between a minimum and maximum size. */
+.welcome-section h1 {
+    font-size: clamp(23px, 3vw, 30px);
+    line-height: 1.2;
+}
+
+/* Makes the description quieter than the main heading. */
+.welcome-description {
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+/* -- Buttons --
+   Shared properties keep the primary and secondary buttons consistent.
+*/
+.primary-button,
+.secondary-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 38px;
+    padding: 9px 13px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+/* Teal identifies the main action, such as saving a transaction. */
+.primary-button {
+    color: #FFFFFF;
+    background: var(--primary);
+}
+
+.primary-button:hover {
+    background: var(--primary-hover);
+}
+
+/* Secondary buttons use a subtle background so they don't compete with primary actions. */
+.secondary-button {
+    color: var(--text);
+    background: var(--surface);
+    border-color: var(--border);
+}
+
+.secondary-button:hover {
+    background: var(--surface-hover);
+}
+
+/* -- Financial Summary --
+   Creates three equally sized cards for income, expenses, and balance.
+*/
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+/* Gives each summary card its own surface, border, and rounded corners. */
+.summary-card {
+    min-width: 0;
+    padding: 15px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+/* Aligns the card label and its icon on opposite sides. */
+.summary-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+/* Centers each summary icon inside a small square. */
+.summary-icon {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    border-radius: 9px;
+}
+
+/* Green represents money received. */
+.income-icon {
+    color: var(--income);
+    background: rgba(22, 163, 74, 0.12);
+}
+
+/* Red represents money spent. */
+.expense-icon {
+    color: var(--expense);
+    background: rgba(220, 38, 38, 0.12);
+}
+
+/* Teal identifies the available balance. */
+.balance-icon {
+    color: var(--primary);
+    background: rgba(13, 148, 136, 0.12);
+}
+
+/* Makes the financial figures prominent and allows long amounts to wrap. */
+.summary-value {
+    margin-top: 12px;
+    font-size: clamp(18px, 2.2vw, 26px);
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+/* Styles the supporting text beneath each financial figure. */
+.summary-description {
+    margin-top: 5px;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+/* -- Dashboard Panels --
+   Places the transaction table beside the analytics panel.
+   minmax() allows both columns to shrink when space is limited.
+*/
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.7fr) minmax(240px, 1fr);
+    align-items: start;
+    gap: 14px;
+    margin-top: 14px;
+}
+
+/* Gives dashboard sections a shared card appearance. */
+.panel {
+    min-width: 0;
+    padding: 15px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+/* Aligns each panel's title and optional action button. */
+.panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.panel-header h2 {
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.panel-header p {
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+/* -- Transaction Controls --
+   Places the search box and category filter side by side.
+*/
+.transaction-controls {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 13px;
+}
+
+/* Gives the search field and category selector a matching appearance. */
+.search-field,
+.filter-field {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    height: 36px;
+    padding: 0 10px;
+    background: var(--background);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+
+/* Lets the search field use the remaining available width. */
+.search-field {
+    flex: 1;
+}
+
+.search-field i {
+    color: var(--muted);
+}
+
+/* Removes the default input border so the wrapper supplies the border. */
+.search-field input,
+.filter-field select {
+    width: 100%;
+    min-width: 0;
+    color: var(--text);
+    background: transparent;
+    border: 0;
+    outline: none;
+    font-size: 11px;
+}
+
+.search-field input::placeholder {
+    color: var(--muted);
+}
+
+.filter-field select {
+    cursor: pointer;
+}
+
+/* Sets the background and text colors of dropdown options. */
+.filter-field option,
+.form-group select option {
+    color: var(--text);
+    background: var(--surface);
+}
+
+/* -- Transaction Table --
+   Allows the table to scroll horizontally instead of breaking the layout.
+*/
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.transaction-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    white-space: nowrap;
+}
+
+/* Makes table headings smaller and separates them from the transaction rows. */
+.transaction-table th {
+    padding: 10px 8px;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    font-size: 10px;
+    font-weight: 600;
+}
+
+/* Adds comfortable spacing around each transaction. */
+.transaction-table td {
+    padding: 12px 8px;
+    border-bottom: 1px solid var(--border);
+    font-size: 11px;
+}
+
+.transaction-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+/* Adds a subtle highlight when a transaction row is hovered over. */
+.transaction-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+/* Aligns the transaction icon beside its description. */
+.transaction-description {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+/* Gives each transaction icon a compact background. */
+.transaction-icon {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    background: var(--surface-hover);
+    border-radius: 8px;
+}
+
+.transaction-name {
+    font-weight: 600;
+}
+
+.transaction-subtitle {
+    margin-top: 2px;
+    color: var(--muted);
+    font-size: 10px;
+}
+
+/* Displays each transaction category as a small label. */
+.transaction-category {
+    display: inline-block;
+    padding: 4px 7px;
+    color: var(--muted);
+    background: var(--surface-hover);
+    border-radius: 5px;
+    font-size: 10px;
+}
+
+/* Keeps income green and expenses red throughout the transaction table. */
+.amount-income {
+    color: var(--income);
+    font-weight: 700;
+}
+
+.amount-expense {
+    color: var(--expense);
+    font-weight: 700;
+}
+
+/* Groups edit and delete buttons at the end of each transaction row. */
+.transaction-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 5px;
+}
+
+.transaction-actions button {
+    width: 28px;
+    height: 28px;
+    color: var(--muted);
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+}
+
+.transaction-actions button:hover {
+    color: var(--text);
+    background: var(--surface-hover);
+}
+
+/* Highlights the delete action to distinguish it from other actions. */
+.transaction-actions .delete-transaction:hover {
+    color: var(--expense);
+}
+
+/* -- Empty States --
+   Displays helpful messages when there are no transactions or chart data.
+*/
+.empty-state,
+.chart-empty-state {
+    padding: 25px 12px;
+    color: var(--muted);
+    text-align: center;
+}
+
+.empty-state > i,
+.chart-empty-state > i {
+    margin-bottom: 10px;
+    font-size: 25px;
+}
+
+.empty-state h3 {
+    margin-bottom: 5px;
+    color: var(--text);
+    font-size: 13px;
+}
+
+.empty-state p,
+.chart-empty-state p {
+    font-size: 11px;
+}
+
+/* -- Spending Analytics --
+   Creates a fixed-height chart area so Chart.js has room to draw the chart.
+*/
+.chart-container {
+    position: relative;
+    width: 100%;
+    height: 220px;
+}
+
+.chart-container canvas {
+    max-width: 100%;
+}
+
+/* Stacks the category legend below the chart. */
+.chart-legend {
+    display: grid;
+    gap: 9px;
+    margin-top: 14px;
+}
+
+/* Aligns each legend color, category name, and amount. */
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+/* Gives each category a small colored marker. */
+.legend-color {
+    width: 9px;
+    height: 9px;
+    flex-shrink: 0;
+    border-radius: 3px;
+}
+
+/* Pushes the category amount to the right. */
+.legend-item strong {
+    margin-left: auto;
+    color: var(--text);
+    font-weight: 600;
+}
+
+/* -- Budget Tracker --
+   Separates the budget form, summary figures, and progress bar.
+*/
+.budget-panel {
+    margin-top: 14px;
+}
+
+/* Places the monthly budget input and save button on one line. */
+.budget-form {
+    display: flex;
+    align-items: end;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+/* Stacks each form label above its input. */
+.form-group {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+    margin-bottom: 14px;
+}
+
+.form-group label {
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 500;
+}
+
+/* Gives inputs and dropdowns a consistent dark appearance. */
+.form-group input,
+.form-group select {
+    width: 100%;
+    min-height: 40px;
+    padding: 10px;
+    color: var(--text);
+    background: var(--background);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    outline: none;
+}
+
+/* Highlights the active form field. */
+.form-group input:focus,
+.form-group select:focus {
+    border-color: var(--primary);
+}
+
+/* Allows the budget input to occupy the remaining row width. */
+.budget-form .form-group {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+/* Arranges budget, spent, and remaining figures in three columns. */
+.budget-overview {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.budget-stat {
+    display: grid;
+    gap: 5px;
+}
+
+.budget-stat span {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+/* Allows large budget amounts to wrap on narrow screens. */
+.budget-stat strong {
+    font-size: 16px;
+    overflow-wrap: anywhere;
+}
+
+/* The progress track represents the full budget. */
+.progress-track {
+    width: 100%;
+    height: 7px;
+    overflow: hidden;
+    background: var(--border);
+    border-radius: 99px;
+}
+
+/* JavaScript changes the fill width to show budget usage. */
+.progress-fill {
+    width: 0;
+    height: 100%;
+    background: var(--primary);
+    border-radius: inherit;
+    transition: width 0.3s ease, background 0.3s ease;
+}
+
+/* Warns the user visually when spending approaches or exceeds the budget. */
+.progress-fill.warning {
+    background: #F59E0B;
+}
+
+.progress-fill.over-budget {
+    background: var(--expense);
+}
+
+.budget-status,
+.budget-warning {
+    margin-top: 9px;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.budget-warning {
+    color: var(--expense);
+}
+
+/* -- Transaction Dialog --
+   Styles the popup used to add or edit a transaction.
+*/
+.transaction-dialog {
+    width: min(440px, calc(100% - 24px));
+    max-height: 90vh;
+    margin: auto;
+    padding: 20px;
+    overflow-y: auto;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+}
+
+/* Darkens and blurs the page behind the open dialog. */
+.transaction-dialog::backdrop {
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(4px);
+}
+
+/* Aligns the dialog heading and close button. */
+.dialog-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.dialog-header h2 {
+    font-size: 19px;
+}
+
+/* Groups the cancel and save buttons at the bottom of the form. */
+.dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+/* -- Notifications --
+   Positions toast messages above the page's bottom-right corner.
+*/
+.toast-container {
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    z-index: 1000;
+    display: grid;
+    gap: 8px;
+    width: min(340px, calc(100% - 32px));
+}
+
+/* Gives each notification a card appearance with a colored left border. */
+.toast {
+    padding: 12px 14px;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--primary);
+    border-radius: 8px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+    font-size: 12px;
+}
+
+.toast.error {
+    border-left-color: var(--expense);
+}
+
+.toast.success {
+    border-left-color: var(--income);
+}
+
+/* -- Page Footer --
+   Centers the short message at the bottom of the main content.
+*/
+.app-footer {
+    padding: 18px 0 4px;
+    color: var(--muted);
+    text-align: center;
+    font-size: 11px;
+}
+
+/* -- Light Theme --
+   Replaces the dark surface colors when JavaScript adds light-theme to body.
+*/
+body.light-theme {
+    --background: #F1F5F9;
+    --sidebar: #FFFFFF;
+    --surface: #FFFFFF;
+    --surface-hover: #E8EEF3;
+    --text: #17202A;
+    --muted: #64748B;
+    --border: #D8E0E8;
+}
+
+body.light-theme .search-field,
+body.light-theme .filter-field,
+body.light-theme .form-group input,
+body.light-theme .form-group select {
+    background: var(--background);
+}
+
+body.light-theme .transaction-table tbody tr:hover {
+    background: rgba(15, 23, 42, 0.03);
+}
+
+/* -- Tablet Layout --
+   Stacks analytics beneath transactions when the screen becomes narrower.
+*/
+@media (max-width: 1050px) {
+    .app-layout {
+        grid-template-columns: 185px minmax(0, 1fr);
+    }
+
+    .dashboard-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .chart-container {
+        height: 240px;
+    }
+}
+
+/* -- Mobile Layout --
+   Turns the sidebar into a slide-out menu and stacks the dashboard content.
+*/
+@media (max-width: 700px) {
+    .app-layout {
+        display: block;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 100;
+        width: 235px;
+        height: 100dvh;
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+        box-shadow: none;
+    }
+
+    /* JavaScript adds .open to reveal the sidebar. */
+    .sidebar.open {
+        transform: translateX(0);
+        box-shadow: 10px 0 35px rgba(0, 0, 0, 0.35);
+    }
+
+    /* Makes the menu button visible on mobile. */
+    .sidebar-toggle {
+        display: inline-grid;
+    }
+
+    .main-content {
+        padding: 12px;
+    }
+
+    .topbar {
+        margin-bottom: 18px;
+    }
+
+    /* Places the dashboard heading and action button on separate rows. */
+    .welcome-section {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    /* Stacks summary cards to keep their figures readable. */
+    .summary-grid {
+        grid-template-columns: 1fr;
+        gap: 9px;
+    }
+
+    .summary-card {
+        padding: 12px;
+    }
+
+    .summary-value {
+        margin-top: 7px;
+        font-size: 23px;
+    }
+
+    /* Gives search and category filtering their own rows. */
+    .transaction-controls {
+        flex-direction: column;
+    }
+
+    .filter-field {
+        width: 100%;
+    }
+
+    .budget-overview {
+        gap: 8px;
+    }
+
+    .budget-stat strong {
+        font-size: 13px;
+    }
+}
+
+/* -- Small Mobile Screens --
+   Reduces padding and stacks controls on narrow phones.
+*/
+@media (max-width: 420px) {
+    .main-content {
+        padding: 10px;
+    }
+
+    .panel {
+        padding: 11px;
+    }
+
+    .panel-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .budget-form {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .budget-form .primary-button {
+        width: 100%;
+    }
+
+    .transaction-table th,
+    .transaction-table td {
+        padding: 10px 6px;
+    }
+
+    .transaction-dialog {
+        padding: 15px;
+    }
+}
+
+/* -- Reduced Motion --
+   Respects users who prefer fewer animations in their device settings.
+*/
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+    }
+}

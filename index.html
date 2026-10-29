@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#080A0B">
+    <title>FinTrack | Personal Finance Dashboard</title>
+
+    <!-- -- Fonts and Icons -- -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <!-- -- Styles and Chart Library -- -->
+    <link rel="stylesheet" href="CSS/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="JS/app.js" defer></script>
+</head>
+<body>
+    <div class="app-layout">
+        <!-- -- Sidebar -- -->
+        <aside class="sidebar" id="sidebar">
+            <nav class="sidebar-nav" aria-label="Main navigation">
+                <a href="#dashboard" class="nav-link active">
+                    <i class="fa-solid fa-house" aria-hidden="true"></i><span>Dashboard</span>
+                </a>
+                <a href="#transactions" class="nav-link">
+                    <i class="fa-solid fa-arrow-right-arrow-left" aria-hidden="true"></i><span>Transactions</span>
+                </a>
+                <a href="#analytics" class="nav-link">
+                    <i class="fa-solid fa-chart-pie" aria-hidden="true"></i><span>Analytics</span>
+                </a>
+                <a href="#budget" class="nav-link">
+                    <i class="fa-solid fa-wallet" aria-hidden="true"></i><span>Budget</span>
+                </a>
+            </nav>
+
+            <!-- -- Sidebar Budget -- -->
+            <section class="sidebar-budget" aria-labelledby="sidebar-budget-title">
+                <h2 id="sidebar-budget-title">Monthly Budget</h2>
+                <p class="budget-amount" id="sidebar-budget-amount">₦0.00</p>
+                <div class="progress-track" id="sidebar-budget-progress" role="progressbar"
+                    aria-label="Monthly budget used" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                    <div class="progress-fill" id="sidebar-budget-fill"></div>
+                </div>
+                <p class="budget-note" id="sidebar-budget-note">Set a budget to get started.</p>
+            </section>
+
+            <!-- -- Sidebar Footer -- -->
+            <footer class="sidebar-footer">
+                <a href="#dashboard" class="footer-brand" aria-label="FinTrack dashboard">
+                    <img src="Assets/Logo.png" alt="" class="brand-logo">
+                    <span>FinTrack</span>
+                </a>
+                <p class="sidebar-status"><span class="status-indicator" aria-hidden="true"></span>Local storage enabled</p>
+                <p class="sidebar-copyright">FinTrack &copy; 2026</p>
+            </footer>
+        </aside>
+
+        <!-- -- Main Content -- -->
+        <main class="main-content" id="dashboard">
+            <!-- -- Top Bar -- -->
+            <header class="topbar">
+                <button type="button" class="icon-button sidebar-toggle" id="sidebar-toggle"
+                    aria-label="Open navigation" aria-controls="sidebar" aria-expanded="false">
+                    <i class="fa-solid fa-bars" aria-hidden="true"></i>
+                </button>
+                <p class="current-date" id="current-date"></p>
+                <button type="button" class="icon-button theme-toggle" id="theme-toggle"
+                    aria-label="Switch to light theme" aria-pressed="false">
+                    <i class="fa-solid fa-moon" aria-hidden="true"></i>
+                </button>
+            </header>
+
+            <!-- -- Dashboard Introduction -- -->
+            <section class="welcome-section">
+                <div>
+                    <p class="eyebrow">YOUR FINANCIAL OVERVIEW</p>
+                    <h1>Dashboard</h1>
+                    <p class="welcome-description">Track your money. Understand your spending.</p>
+                </div>
+                <button type="button" class="primary-button" id="add-transaction-button">
+                    <i class="fa-solid fa-plus" aria-hidden="true"></i>Add Transaction
+                </button>
+            </section>
+
+            <!-- -- Financial Summary -- -->
+            <section class="summary-grid" aria-label="Financial summary">
+                <article class="summary-card">
+                    <div class="summary-card-header">
+                        <span>Total Income</span>
+                        <span class="summary-icon income-icon"><i class="fa-solid fa-arrow-down" aria-hidden="true"></i></span>
+                    </div>
+                    <p class="summary-value" id="total-income">₦0.00</p>
+                    <p class="summary-description">All recorded income</p>
+                </article>
+                <article class="summary-card">
+                    <div class="summary-card-header">
+                        <span>Total Expenses</span>
+                        <span class="summary-icon expense-icon"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></span>
+                    </div>
+                    <p class="summary-value" id="total-expenses">₦0.00</p>
+                    <p class="summary-description">All recorded expenses</p>
+                </article>
+                <article class="summary-card" id="balance-card">
+                    <div class="summary-card-header">
+                        <span>Current Balance</span>
+                        <span class="summary-icon balance-icon"><i class="fa-solid fa-wallet" aria-hidden="true"></i></span>
+                    </div>
+                    <p class="summary-value" id="current-balance">₦0.00</p>
+                    <p class="summary-description" id="balance-description">Your recorded income minus expenses.</p>
+                </article>
+            </section>
+
+            <!-- -- Transactions and Analytics -- -->
+            <div class="dashboard-grid">
+                <section class="panel transactions-panel" id="transactions">
+                    <div class="panel-header">
+                        <div>
+                            <h2>Recent Transactions</h2>
+                            <p>Manage your income and expenses.</p>
+                        </div>
+                        <button type="button" class="secondary-button" id="export-csv-button">
+                            <i class="fa-solid fa-download" aria-hidden="true"></i>Export CSV
+                        </button>
+                    </div>
+
+                    <!-- -- Search and Filter -- -->
+                    <div class="transaction-controls">
+                        <label class="search-field">
+                            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                            <span class="visually-hidden">Search transactions</span>
+                            <input type="search" id="transaction-search" placeholder="Search transactions..." autocomplete="off">
+                        </label>
+                        <label class="filter-field">
+                            <span class="visually-hidden">Filter by category</span>
+                            <select id="category-filter">
+                                <option value="all">All Categories</option>
+                                <option>Food</option>
+                                <option>Rent</option>
+                                <option>Transportation</option>
+                                <option>Bills &amp; Utilities</option>
+                                <option>Entertainment</option>
+                                <option>Shopping</option>
+                                <option>Health</option>
+                                <option>Education</option>
+                                <option>Salary</option>
+                                <option>Business</option>
+                                <option>Other</option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <!-- -- Transaction Table -- -->
+                    <div class="table-wrapper">
+                        <table class="transaction-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Description</th>
+                                    <th scope="col">Category</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col"><span class="visually-hidden">Actions</span></th>
+                                </tr>
+                            </thead>
+                            <tbody id="transaction-list"></tbody>
+                        </table>
+                        <div class="empty-state" id="empty-state" hidden>
+                            <i class="fa-solid fa-receipt" aria-hidden="true"></i>
+                            <h3>No transactions found</h3>
+                            <p>Add a transaction or change your search filters.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- -- Spending Analytics -- -->
+                <section class="panel analytics-panel" id="analytics">
+                    <div class="panel-header">
+                        <div>
+                            <h2>Spending Analytics</h2>
+                            <p>Current-month expenses by category.</p>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="spending-chart" role="img" aria-label="Chart showing expenses by category"></canvas>
+                    </div>
+                    <div class="chart-legend" id="chart-legend"></div>
+                    <div class="chart-empty-state" id="chart-empty-state" hidden>
+                        <i class="fa-solid fa-chart-pie" aria-hidden="true"></i>
+                        <p>Add expenses this month to see your spending breakdown.</p>
+                    </div>
+                </section>
+            </div>
+
+            <!-- -- Monthly Budget -- -->
+            <section class="panel budget-panel" id="budget">
+                <div class="panel-header">
+                    <div>
+                        <h2>Monthly Budget</h2>
+                        <p>Set a spending limit and monitor your progress.</p>
+                    </div>
+                </div>
+                <form class="budget-form" id="budget-form">
+                    <div class="form-group">
+                        <label for="monthly-budget">Monthly spending limit (₦)</label>
+                        <input type="number" id="monthly-budget" name="monthlyBudget" min="0" step="0.01"
+                            placeholder="Enter your monthly budget" required>
+                    </div>
+                    <button type="submit" class="primary-button">Save Budget</button>
+                </form>
+                <div class="budget-overview">
+                    <div class="budget-stat"><span>Budget</span><strong id="budget-total">₦0.00</strong></div>
+                    <div class="budget-stat"><span>Spent</span><strong id="budget-spent">₦0.00</strong></div>
+                    <div class="budget-stat"><span>Remaining</span><strong id="budget-remaining">₦0.00</strong></div>
+                </div>
+                <div class="progress-track budget-progress" id="budget-progress" role="progressbar"
+                    aria-label="Monthly budget used" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                    <div class="progress-fill" id="budget-progress-fill"></div>
+                </div>
+                <p class="budget-status" id="budget-status" aria-live="polite">Set your monthly budget to get started.</p>
+                <p class="budget-warning" id="budget-warning" role="status" hidden></p>
+            </section>
+
+            <!-- -- Page Footer -- -->
+            <footer class="app-footer"><p>Manage your money with clarity.</p></footer>
+        </main>
+    </div>
+
+    <!-- -- Mobile Sidebar Backdrop -- -->
+    <button type="button" class="sidebar-backdrop" id="sidebar-backdrop" aria-label="Close navigation" hidden></button>
+
+    <!-- -- Add or Edit Transaction Dialog -- -->
+    <dialog class="transaction-dialog" id="transaction-dialog">
+        <form id="transaction-form">
+            <div class="dialog-header">
+                <div>
+                    <p class="eyebrow">FINANCIAL RECORD</p>
+                    <h2 id="transaction-dialog-title">Add Transaction</h2>
+                </div>
+                <button type="button" class="icon-button" id="close-transaction-dialog" aria-label="Close transaction form">
+                    <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                </button>
+            </div>
+
+            <div class="form-group">
+                <label for="transaction-type">Transaction Type</label>
+                <select id="transaction-type" name="type" required>
+                    <option value="expense">Expense</option>
+                    <option value="income">Income</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="transaction-description">Description</label>
+                <input type="text" id="transaction-description" name="description" maxlength="100"
+                    placeholder="e.g. Groceries" required>
+            </div>
+            <div class="form-group">
+                <label for="transaction-amount">Amount (₦)</label>
+                <input type="number" id="transaction-amount" name="amount" min="0.01" step="0.01"
+                    placeholder="0.00" required>
+            </div>
+            <div class="form-group">
+                <label for="transaction-category">Category</label>
+                <select id="transaction-category" name="category" required>
+                    <option>Food</option>
+                    <option>Rent</option>
+                    <option>Transportation</option>
+                    <option>Bills &amp; Utilities</option>
+                    <option>Entertainment</option>
+                    <option>Shopping</option>
+                    <option>Health</option>
+                    <option>Education</option>
+                    <option>Salary</option>
+                    <option>Business</option>
+                    <option>Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="transaction-date">Date</label>
+                <input type="date" id="transaction-date" name="date" required>
+            </div>
+            <div class="dialog-actions">
+                <button type="button" class="secondary-button" id="cancel-transaction">Cancel</button>
+                <button type="submit" class="primary-button" id="save-transaction-button">Save Transaction</button>
+            </div>
+        </form>
+    </dialog>
+
+    <!-- -- Notifications -- -->
+    <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="true"></div>
+</body>
+</html>
